@@ -27,5 +27,6 @@ jobs:
 
       - name: comfirm build result
         run: |
-          - ls ./build
+          - ls
+          - ./build
 
