@@ -20,12 +20,11 @@ connect(async (client: Client) => {
 
   // build application
   // write the build output to the host
-  await runner
-    .withExec(["npm", "run", "build"])
-    .directory("build/")
-    .export("./build");
-
+  const build = await runner.withExec(["npm", "run", "build"]);
+  // 先に出力結果の表示
   // 結果確認のためlsコマンドを追加
-  const lsResult = await runner.withExec(["ls", "./build"]).stdout();
+  const lsResult = await build.withExec(["ls", "./build"]).stdout();
   console.log(lsResult);
+  // buildした結果をホストに出力
+  await build.directory("build/").export("./build");
 });
