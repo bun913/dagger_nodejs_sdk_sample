@@ -25,8 +25,3 @@ jobs:
         name: Run Dagger Node.js SDK CI
         run: npm run ci
 
-      - name: comfirm build result
-        run: |
-          - ls
-          - ./build
-

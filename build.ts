@@ -24,4 +24,8 @@ connect(async (client: Client) => {
     .withExec(["npm", "run", "build"])
     .directory("build/")
     .export("./build");
+
+  // 結果確認のためlsコマンドを追加
+  const lsResult = await runner.withExec(["ls", "./build"]).stdout();
+  console.log(lsResult);
 });
