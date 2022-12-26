@@ -2,13 +2,26 @@ import Client, { connect } from "@dagger.io/dagger";
 
 // initialize Dagger client
 connect(async (client: Client) => {
+  // get reference to the local project
+  const source = client.host().directory(".", { exclude: ["node_modules/"] });
+
   // get Node image
-  // get Node version
-  const node = client.container().from("node:16").withExec(["node", "-v"]);
+  const node = client.container().from("node:16");
 
-  // execute
-  const version = await node.stdout();
+  // mount cloned repository into Node image
+  const runner = client
+    .container({ id: node })
+    .withMountedDirectory("/src", source)
+    .withWorkdir("/src")
+    .withExec(["npm", "install"]);
 
-  // print output
-  console.log("Hello from Dagger and Node " + version);
+  // run tests
+  await runner.withExec(["npm", "test", "--", "--watchAll=false"]).exitCode();
+
+  // build application
+  // write the build output to the host
+  await runner
+    .withExec(["npm", "run", "build"])
+    .directory("build/")
+    .export("./build");
 });
