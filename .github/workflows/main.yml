@@ -1,0 +1,26 @@
+name: 'ci'
+
+on:
+  push:
+    branches:
+    - master
+
+jobs:
+  dagger:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v3
+      -
+        name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.19.0
+          cache: npm
+      -
+        name: Install
+        run: npm install
+      -
+        name: Run Dagger Node.js SDK CI
+        run: npm run ci
